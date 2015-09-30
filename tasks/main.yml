@@ -1,27 +1,12 @@
 ---
-- name: install git make autoconf and python
-  apt: name={{ item }} state=present
-  with_items:
-    - git
-    - make
-    - autoconf
-    - python
+- name: Install opentsdb
+  yum: name={{ opentsdb_rpm_url }} state=present
 
-- name: checkout OpenTSDB
-  git: repo=git://github.com/OpenTSDB/opentsdb.git dest=/opt/opentsdb accept_hostkey=yes
+- name: Configure opentsdb
+  lineinfile: dest=/etc/opentsdb/opentsdb.conf regexp=^.*zk_quorum=.*$ line=tsd.storage.hbase.zk_quorum="{{ zookeeper_quorum }}" backup=yes
 
-- name: build OpenTSDB
-  shell: cd /opt/opentsdb && JAVA_HOME=/usr/java/jdk1.8.0_11 PATH=$PATH:$JAVA_HOME/bin ./build.sh
+- name: Create OpenTSDB tables
+  shell: COMPRESSION=SNAPPY HBASE_HOME=/usr/lib/ams-hbase JAVA_HOME=/usr/java/latest /usr/share/opentsdb/tools/create_table.sh
 
-- name: create /etc/opentsdb
-  file: state=directory dest=/etc/opentsdb
-
-- name: put OpenTSDB config
-  template: src=opentsdb.conf dest=/etc/opentsdb/opentsdb.conf
-
-- name: put opentsdb eye config file
-  template: src=opentsdb.rb dest=/etc/eye/opentsdb.rb owner=root group=root mode=0644
-
-- name: load config in eye
-  command: bash -c "source /usr/local/rvm/scripts/rvm && eye l /etc/eye/apps.eye"
-  sudo: yes 
+- name: Ensure opentsdb is running and enabled
+  service: name=opentsdb state=restarted enabled=yes
