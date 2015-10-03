@@ -6,7 +6,7 @@
   lineinfile: dest=/etc/opentsdb/opentsdb.conf regexp=^.*zk_quorum=.*$ line=tsd.storage.hbase.zk_quorum="{{ zookeeper_quorum }}" backup=yes
 
 - name: Create OpenTSDB tables
-  shell: COMPRESSION=SNAPPY HBASE_HOME=/usr/lib/ams-hbase JAVA_HOME=/usr/java/latest /usr/share/opentsdb/tools/create_table.sh
+  shell: COMPRESSION=SNAPPY HBASE_HOME=/usr/hdp/current/hbase-client JAVA_HOME=/usr/java/latest /usr/share/opentsdb/tools/create_table.sh
 
 - name: Ensure opentsdb is running and enabled
   service: name=opentsdb state=restarted enabled=yes
