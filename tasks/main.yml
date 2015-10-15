@@ -3,10 +3,9 @@
   yum: name={{ opentsdb_rpm_url }} state=present
 
 - name: Configure opentsdb
-  lineinfile: dest=/etc/opentsdb/opentsdb.conf regexp=^.*zk_quorum=.*$ line=tsd.storage.hbase.zk_quorum="{{ zookeeper_quorum }}" backup=yes
-  lineinfile: dest=/etc/opentsdb/opentsdb.conf regexp=^.*tsd.http.request.enable_chunked=.*$ line=tsd.http.request.enable_chunked=true backup=yes
-  lineinfile: dest=/etc/opentsdb/opentsdb.conf regexp=^.*tsd.http.request.max_chunk=.*$ line=tsd.http.request.max_chunk=16384 backup=yes
-
+  template:
+    dest: /etc/opentsdb/opentsdb.conf
+    src: opentsdb.conf.j2
 
 - name: Create OpenTSDB tables
   shell: COMPRESSION=SNAPPY HBASE_HOME=/usr/hdp/current/hbase-client JAVA_HOME=/usr/java/latest /usr/share/opentsdb/tools/create_table.sh

@@ -3,3 +3,6 @@ opentsdb_rpm_url: "https://github.com/OpenTSDB/opentsdb/releases/download/v2.0.0
 opentsdb_port: 4242
 zookeeper_client_port: "2181"
 zookeeper_quorum: "{{ groups.zookeeper | join(':' + zookeeper_client_port + ',') }}:{{ zookeeper_client_port }}"
+
+opentsdb_cache_dir: "/data12/opentsdb"
+opentsdb_max_chunk: "204800"
