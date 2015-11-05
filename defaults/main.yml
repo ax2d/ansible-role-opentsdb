@@ -6,3 +6,7 @@ zookeeper_quorum: "{{ groups.zookeeper | join(':' + zookeeper_client_port + ',')
 
 opentsdb_cache_dir: "/data12/opentsdb"
 opentsdb_max_chunk: "204800"
+opentsdb_create_tables: false
+
+opentsdb_home: "/usr/share/opentsdb"
+hbase_home: "/usr/hdp/current/hbase-client"

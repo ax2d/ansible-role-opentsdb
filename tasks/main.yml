@@ -8,7 +8,8 @@
     src: opentsdb.conf.j2
 
 - name: Create OpenTSDB tables
-  shell: COMPRESSION=SNAPPY HBASE_HOME=/usr/hdp/current/hbase-client JAVA_HOME=/usr/java/latest /usr/share/opentsdb/tools/create_table.sh
+  shell: COMPRESSION=SNAPPY HBASE_HOME={{ hbase_home }} JAVA_HOME=/usr/java/latest {{ opentsdb_home }}/tools/create_table.sh
+  when: opentsdb_create_tables
 
 - name: Ensure opentsdb is running and enabled
   service: name=opentsdb state=restarted enabled=yes
