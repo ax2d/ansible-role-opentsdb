@@ -11,5 +11,8 @@
   shell: COMPRESSION=SNAPPY HBASE_HOME={{ hbase_home }} JAVA_HOME=/usr/java/latest {{ opentsdb_home }}/tools/create_table.sh
   when: opentsdb_create_tables
 
+- name: Disable console logging
+  shell: sed -i 's/1>> ${LOG_FILE}opentsdb.out 2>> ${LOG_FILE}opentsdb.err //g' /etc/init.d/opentsdb
+
 - name: Ensure opentsdb is running and enabled
   service: name=opentsdb state=restarted enabled=yes
